@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <time.h>
 
-void producer_process(int id, Queue *qa, Queue *qb)
+void producer_process(int id, Queue *qa, Queue *qb, Args args)
 {
     srand(time(NULL) + id);
     bool next_queue = false;
@@ -30,10 +30,13 @@ void producer_process(int id, Queue *qa, Queue *qb)
             printf("[PROD %d (%5d)] Placed %d on queue %c\n", 
                 id, pid, value, next_queue + id * 2 + 'A');
         }
+        else
+        {
+            printf("[PROD %d (%5d)] Queue %c is full\n", 
+                id, pid, next_queue + id * 2 + 'A');
+        }
         next_queue = !next_queue;
 
-        #if SLOW_OPERATION != 0
-        usleep(MIN_DELAY_US + rand() % (MAX_DELAY_US - MIN_DELAY_US + 1));
-        #endif
+        usleep((args.producer_delay_ms + rand() % (args.producer_randomness_ms + 1)) * 1000);
     }
 }

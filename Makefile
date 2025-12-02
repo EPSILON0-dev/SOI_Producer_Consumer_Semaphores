@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -O2 -I./src
 
-SRC = src/main.c src/producer.c src/consumer.c src/queue.c
+SRC = src/main.c src/producer.c src/consumer.c src/queue.c src/args.c
 OBJ = $(SRC:.c=.o)
 
 all: semaphores

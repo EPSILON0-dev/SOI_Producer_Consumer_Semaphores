@@ -2,8 +2,10 @@
 #include <sys/wait.h>
 #include "semaphores.h"
 
-int main() 
+int main(int argc, char *argv[]) 
 {
+    Args args = parse_args(argc, argv);
+
     // Setup PIDs
     pid_t pids[N_CONS + N_PORD];
 
@@ -11,7 +13,7 @@ int main()
     Queue *queues[N_QUEUES];
     for (int i = 0; i < N_QUEUES; i++) 
     {
-        queue_init(&queues[i], QUEUE_SIZE);
+        queue_init(&queues[i], args.queue_length);
     }
 
     // Spawn producers
@@ -19,7 +21,7 @@ int main()
     {
         if ((pids[i] = fork()) == 0) 
         {
-            producer_process(i, queues[i * 2 + 0], queues[i * 2 + 1]);
+            producer_process(i, queues[i * 2 + 0], queues[i * 2 + 1], args);
             return 0;
         }
     }
@@ -29,7 +31,7 @@ int main()
     {
         if ((pids[N_PORD + i] = fork()) == 0) 
         {
-            consumer_process(i, queues[i]);
+            consumer_process(i, queues[i], args);
             return 0;
         }
     }

@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include "semaphores.h"
 
-void consumer_process(int id, Queue *q) 
+void consumer_process(int id, Queue *q, Args args) 
 {
     for ( ;; ) 
     {
@@ -19,8 +19,6 @@ void consumer_process(int id, Queue *q)
                 id, getpid(), id + 'A');
         }
 
-        #if SLOW_OPERATION != 0
-        usleep(MIN_DELAY_US + rand() % (MAX_DELAY_US - MIN_DELAY_US + 1));
-        #endif
+        usleep((args.consumer_delay_ms + rand() % (args.consumer_randomness_ms + 1)) * 1000);
     }
 }
