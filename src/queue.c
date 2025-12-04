@@ -30,7 +30,11 @@ void queue_init(Queue **q, size_t size)
     shared_q->size = 0;
     shared_q->head = 0;
     shared_q->tail = 0;
+
+    // Initialize semaphores
     sem_init(&shared_q->sem, 1, 1);
+    sem_init(&shared_q->empty, 1, size); // Initially, all slots are empty
+    sem_init(&shared_q->full, 1, 0);     // Initially, no slots are full
 
     // Copy the shared queue pointer to the provided pointer
     *q = shared_q;
@@ -52,41 +56,55 @@ void queue_destroy(Queue **q)
         exit(EXIT_FAILURE);
     }
 
+    // Destroy semaphores
     sem_destroy(&(*q)->sem);
+    sem_destroy(&(*q)->empty);
+    sem_destroy(&(*q)->full);
+
     free(*q);
     *q = NULL;
 }
 
 int queue_try_push(Queue *q, int value)
 {
-    bool pushed = false;
+    // Wait for an empty slot
+    sem_wait(&q->empty);
+
+    // Lock the queue
     sem_wait(&q->sem);
 
-    if (q->size < q->capacity) 
-    {
-        q->buffer[q->tail] = value;
-        q->tail = (q->tail + 1) % q->capacity;
-        q->size++;
-        pushed = true;
-    }
+    // Push the value
+    q->buffer[q->tail] = value;
+    q->tail = (q->tail + 1) % q->capacity;
+    q->size++;
 
+    // Unlock the queue
     sem_post(&q->sem);
-    return pushed ? 0 : -1;
+
+    // Signal that a slot is now full
+    sem_post(&q->full);
+
+    return 0;
 }
 
 int queue_try_pop(Queue *q, int *value) 
 {
-    bool popped = false;
+    // Wait for a full slot
+    sem_wait(&q->full);
+
+    // Lock the queue
     sem_wait(&q->sem);
 
-    if (q->size > 0) 
-    {
-        *value = q->buffer[q->head];
-        q->head = (q->head + 1) % q->capacity;
-        q->size--;
-        popped = true;
-    }
+    // Pop the value
+    *value = q->buffer[q->head];
+    q->head = (q->head + 1) % q->capacity;
+    q->size--;
 
+    // Unlock the queue
     sem_post(&q->sem);
-    return popped ? 0 : -1;
+
+    // Signal that a slot is now empty
+    sem_post(&q->empty);
+
+    return 0;
 }

@@ -32,7 +32,7 @@ void producer_process(int id, Queue *qa, Queue *qb, Args args)
         }
         else
         {
-            printf("[PROD %d (%5d)] Queue %c is full\n", 
+            fprintf(stderr, "[PROD %d (%5d)] Queue %c is full\n", 
                 id, pid, next_queue + id * 2 + 'A');
         }
         next_queue = !next_queue;

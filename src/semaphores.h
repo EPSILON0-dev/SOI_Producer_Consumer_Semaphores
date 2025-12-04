@@ -27,6 +27,8 @@ typedef struct {
     size_t capacity;
     size_t size;
     sem_t sem;
+    sem_t empty;
+    sem_t full;
 } Queue;
 
 void queue_init(Queue **q, size_t size);

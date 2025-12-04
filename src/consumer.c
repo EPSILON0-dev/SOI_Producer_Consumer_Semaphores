@@ -15,7 +15,7 @@ void consumer_process(int id, Queue *q, Args args)
         }
         else
         {
-            printf("[CONS %d (%5d)] Queue %c is empty\n", 
+            fprintf(stderr, "[CONS %d (%5d)] Queue %c is empty\n", 
                 id, getpid(), id + 'A');
         }
 
