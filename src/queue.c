@@ -73,7 +73,15 @@ int queue_try_push(Queue *q, int value)
     // Lock the queue
     sem_wait(&q->sem);
 
+    // Check if there's space to push
+    if (q->size == q->capacity) 
+    {
+        sem_post(&q->sem);
+        return -1;
+    }
+
     // Push the value
+    if (q->size == q->capacity) return -1;
     q->buffer[q->tail] = value;
     q->tail = (q->tail + 1) % q->capacity;
     q->size++;
@@ -94,6 +102,13 @@ int queue_try_pop(Queue *q, int *value)
 
     // Lock the queue
     sem_wait(&q->sem);
+
+    // Check if there's anything to pop
+    if (q->size == 0) 
+    {
+        sem_post(&q->sem);
+        return -1;
+    }
 
     // Pop the value
     *value = q->buffer[q->head];
