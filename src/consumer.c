@@ -5,6 +5,8 @@
 
 void consumer_process(int id, Queue *q, Args args) 
 {
+    fprintf(stderr, "[CONS %d (%5d)] Starting consumer process\n", id, getpid());
+
     for ( ;; ) 
     {
         int value;

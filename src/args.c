@@ -7,10 +7,10 @@ Args parse_args(int argc, char *argv[])
 {
     Args args = {
         .queue_length = 10,
-        .producer_delay_ms = 100,
-        .consumer_delay_ms = 150,
-        .producer_randomness_ms = 50,
-        .consumer_randomness_ms = 75
+        .producer_delay_ms = 10,
+        .consumer_delay_ms = 25,
+        .producer_randomness_ms = 0,
+        .consumer_randomness_ms = 0
     };
 
     int index = 1;

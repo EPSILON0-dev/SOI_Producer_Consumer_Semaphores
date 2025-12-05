@@ -9,7 +9,8 @@ void producer_process(int id, Queue *qa, Queue *qb, Args args)
 {
     srand(time(NULL) + id);
     bool next_queue = false;
-    pid_t pid = getpid();
+
+    fprintf(stderr, "[PROD %d (%5d)] Starting producer process\n", id, getpid());
 
     for ( ;; ) 
     { 
@@ -28,12 +29,12 @@ void producer_process(int id, Queue *qa, Queue *qb, Args args)
         if (result == 0)
         {
             printf("[PROD %d (%5d)] Placed %d on queue %c\n", 
-                id, pid, value, next_queue + id * 2 + 'A');
+                id, getpid(), value, next_queue + id * 2 + 'A');
         }
         else
         {
             fprintf(stderr, "[PROD %d (%5d)] Queue %c is full\n", 
-                id, pid, next_queue + id * 2 + 'A');
+                id, getpid(), next_queue + id * 2 + 'A');
         }
         next_queue = !next_queue;
 
