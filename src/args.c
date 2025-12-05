@@ -22,10 +22,10 @@ Args parse_args(int argc, char *argv[])
             printf("Options:\n");
             printf("  --help, -h                 Show this help message and exit\n");
             printf("  --ql <length>              Set queue length (default: 10)\n");
-            printf("  --pd <ms>                  Set producer delay in milliseconds (default: 100)\n");
-            printf("  --cd <ms>                  Set consumer delay in milliseconds (default: 150)\n");
-            printf("  --pr <ms>                  Set producer randomness in milliseconds (default: 50)\n");
-            printf("  --cr <ms>                  Set consumer randomness in milliseconds (default: 75)\n");
+            printf("  --pd <ms>                  Set producer delay in milliseconds (default: 10)\n");
+            printf("  --cd <ms>                  Set consumer delay in milliseconds (default: 25)\n");
+            printf("  --pr <ms>                  Set producer randomness in milliseconds (default: 0)\n");
+            printf("  --cr <ms>                  Set consumer randomness in milliseconds (default: 0)\n");
             exit(EXIT_SUCCESS);
         }
         else if (strcmp(argv[index], "--ql") == 0 && index + 1 < argc) 
